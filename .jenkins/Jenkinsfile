@@ -20,7 +20,8 @@ pipeline {
             script {
                 withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
                 script {
-                    sh "aws eks update-kubeconfig --name eks_staging-west-20211004 --region us-west-2"
+                    def cluster = getInfo.namespace('pce0')
+                    sh "aws eks update-kubeconfig --name ${cluster.cluster} --region ${cluster.region}"
                     sh "kubectl get namespaces"
                     sh "kubectl get pods -n pce0"
                 }
