@@ -11,6 +11,9 @@ spec:
     command: ["sleep", "1d"]
     imagePullPolicy: "Always"
     restartPolicy: "Never"
+    volumeMounts:
+    - name: promoter
+      mountPath: /usr/promoter
   - name: docker
     image: 888804278608.dkr.ecr.us-west-2.amazonaws.com/public/docker-awscli:0.1
     command: ["tail", "-f", "/dev/null"]
@@ -24,3 +27,6 @@ spec:
     - name: docker
       hostPath:
         path: /var/run/docker.sock
+    - name: promoter
+      hostPath:
+        path: /promoter/*

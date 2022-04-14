@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  annotations:
+  name: settlement-orders-web-http-pce0
+  namespace: pce0
+spec:
+  hosts:
+  - settlement-orders-web.pce0.svc.cluster.local
+  http:
+  - match:
+    - headers:
+        x-real-ip:
+          exact: 208.127.242.56
+    route:
+    - destination:
+        host: settlement-orders-web-canary.pce0.svc.cluster.local
+  - route:
+    - destination:
+        host: settlement-orders-web.pce0.svc.cluster.local
+      weight: ${liveWeight}
+    - destination:
+        host: settlement-orders-web-canary.pce0.svc.cluster.local
+      weight: ${canaryWeight}
