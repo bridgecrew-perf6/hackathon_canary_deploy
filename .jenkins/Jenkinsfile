@@ -4,6 +4,7 @@ pipeline {
 
   agent {
     kubernetes {
+      label 'helmfile'
       yamlFile '.jenkins/sidecar.yaml'
       inheritFrom 'default'
     }
