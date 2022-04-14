@@ -23,7 +23,7 @@ pipeline {
                     def cluster = getInfo.namespace('pce0')
                     withAWS(role: getRole(cluster.account).role, roleAccount: getRole(cluster.account).roleAccount) {
                     script {
-                        sh "ls /usr/promoter"
+                        sh "ls /var/jenkins_home/promoter"
                         sh "aws eks update-kubeconfig --name ${cluster.cluster} --region ${cluster.region}"
                         sh "kubectl get namespaces"
                         sh "kubectl get pods -n pce0"
