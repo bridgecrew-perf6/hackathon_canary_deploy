@@ -15,7 +15,7 @@ pipeline {
   
   stages {
     stage('deploy canary') {
-    container('helmfile') {
+        container('helmfile') {
           script {
             withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
               script {
@@ -26,7 +26,6 @@ pipeline {
             }
           }
         }
-      }
     }
   }
 }
