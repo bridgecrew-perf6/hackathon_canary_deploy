@@ -1,0 +1,32 @@
+library "jenkins-library"
+
+pipeline {
+
+  agent {
+    kubernetes {
+      yamlFile '.jenkins/sidecar.yaml'
+      inheritFrom 'default'
+    }
+  }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+    skipDefaultCheckout true
+  }
+  
+  stages {
+    stage('deploy canary') {
+    container('helmfile') {
+          script {
+            withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
+              script {
+                sh "aws eks update-kubeconfig --name eks_staging-west-20211004 --region us-west-2"
+                sh "kubectl get namespaces"
+                sh "kubectl get pods -n pce0"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

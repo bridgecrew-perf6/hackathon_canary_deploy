@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hackathon_canary_deploy
+  labels:
+    some-label: docker
+spec:
+  containers:
+  - name: helmfile
+    image: "888804278608.dkr.ecr.us-west-2.amazonaws.com/thirdparty/helmfile:latest"
+    command: ["sleep", "1d"]
+    imagePullPolicy: "Always"
+    restartPolicy: "Never"
+  - name: docker
+    image: 888804278608.dkr.ecr.us-west-2.amazonaws.com/public/docker-awscli:0.1
+    command: ["tail", "-f", "/dev/null"]
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: docker
+      mountPath: /var/run/docker.sock
+
+
+  volumes:
+    - name: docker
+      hostPath:
+        path: /var/run/docker.sock
