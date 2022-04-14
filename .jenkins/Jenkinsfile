@@ -17,17 +17,19 @@ pipeline {
   stages {
     stage('deploy canary') {
         steps {
-            container('helmfile') {
-            script {
-                withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
+            node('helmfile') {
+                container('helmfile') {
                 script {
-                    def cluster = getInfo.namespace('pce0')
-                    sh "aws eks update-kubeconfig --name ${cluster.cluster} --region ${cluster.region}"
-                    sh "kubectl get namespaces"
-                    sh "kubectl get pods -n pce0"
+                    withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
+                    script {
+                        def cluster = getInfo.namespace('pce0')
+                        sh "aws eks update-kubeconfig --name ${cluster.cluster} --region ${cluster.region}"
+                        sh "kubectl get namespaces"
+                        sh "kubectl get pods -n pce0"
+                    }
+                    }
                 }
                 }
-            }
             }
         }
     }
