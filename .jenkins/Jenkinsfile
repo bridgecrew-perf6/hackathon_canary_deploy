@@ -20,9 +20,9 @@ pipeline {
             node('helmfile') {
                 container('helmfile') {
                 script {
-                    withAWS(role: getRole("infrastructure").role, roleAccount: getRole("infrastructure").roleAccount) {
+                    def cluster = getInfo.namespace('pce0')
+                    withAWS(role: getRole(cluster.account).role, roleAccount: getRole(cluster.account).roleAccount) {
                     script {
-                        def cluster = getInfo.namespace('pce0')
                         sh "aws eks update-kubeconfig --name ${cluster.cluster} --region ${cluster.region}"
                         sh "kubectl get namespaces"
                         sh "kubectl get pods -n pce0"
